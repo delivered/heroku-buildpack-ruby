@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# bin/compile_opencv <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+build=$1
+cache=$2
+
+mkdir -p ${build}
+mkdir -p ${cache}
+
+cmake_version="2.8.12.2"
+cmake_url="http://www.cmake.org/files/v2.8/cmake-${cmake_version}.tar.gz"
+cmake_file="cmake-${cmake_version}.tar.gz"
+cmake_tar_dir="cmake-${cmake_version}"
+
+opencv_version="2.4.9"
+opencv_dir="opencv-${opencv_version}"
+opencv_file="${opencv_dir}.tar.gz"
+opencv_url="https://codeload.github.com/Itseez/opencv/tar.gz/${opencv_version}"
+
+cache_target=${cache}/${cmake_file}
+build_target=${build}/.heroku
+target=/app/.heroku
+
+indent() {
+  RE="s/^/       /"
+  [ $(uname) == "Darwin" ] && sed -l "$RE" || sed -u "$RE"
+}
+
+if [ ! -f ${cache_target} ]; then
+  echo "No cached compile detected. Building..." | indent
+  cd $build
+
+  echo "Compiling cmake v${cmake_version}..." | indent
+
+  curl -s ${cmake_url} > ${cmake_file}
+  tar zxf ${cmake_file}
+  cd ${cmake_tar_dir}
+  ./bootstrap --prefix=${target} | indent
+  make | indent
+  make install | indent
+  cd ..
+
+  tar czf ${cache_target} -C ${target} .
+fi
+
+mkdir -p ${build_target}
+tar xzf ${cache_target} -C ${build_target}
+PATH=${build_target}/bin:$PATH
+
+cache_target=${cache}/${opencv_file}
+build_target=${build}/.heroku
+target=/app/.heroku
+
+if [ ! -f ${cache_target} ]; then
+  echo "No cached compile detected. Building..." | indent
+  cd $build
+
+  echo "Compiling OpenCV v${opencv_version}..." | indent
+  curl -s ${opencv_url} > ${opencv_file}
+  tar zxf ${opencv_file}
+  cd ${opencv_dir}
+  mkdir build
+  cd build
+  cmake -DCMAKE_INSTALL_PREFIX=${target} -DCMAKE_FIND_ROOT_PATH=${target} -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=OFF -DCMAKE_SHARED_LINKER_FLAGS="-fPIC" .. | indent
+  make install | indent
+  cd ..
+
+  tar czf ${cache_target} -C ${target} .
+fi
+
+mkdir -p ${build_target}
+tar xzf ${cache_target} -C ${build_target}
