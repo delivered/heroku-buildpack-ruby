@@ -11,11 +11,8 @@ indent() {
 build=$1
 cache=$2
 
-echo "Build dir: $1"
-echo "Cache dir: $2"
-
-mkdir -p ${build}
-mkdir -p ${cache}
+mkdir -p $build
+mkdir -p $cache
 
 cmake_version="2.8.12.2"
 cmake_url="http://www.cmake.org/files/v2.8/cmake-${cmake_version}.tar.gz"
@@ -53,30 +50,33 @@ if [ ! -f ${cache_target} ]; then
   tar czf ${cache_target} -C ${target} .
 fi
 
-mkdir -p ${build_target}
-tar xzf ${cache_target} -C ${build_target}
-PATH=${build_target}/bin:$PATH
+mkdir -p $build_target
+tar xzf $cache_target -C $build_target
+PATH=$build_target/bin:$PATH
 
-cache_target=${cache}/${opencv_file}
-build_target=${build}/.heroku
-target=/app/.heroku
+cache_target=$cache/$opencv_file
+build_target=$build/.heroku
 
-if [ ! -f ${cache_target} ]; then
-  echo "No cached compile detected. Building..." | indent
-  cd $build
+if [ ! -f $cache_target ]; then
+  opencv_package="https://s3.amazonaws.com/bloominga-public/heroku/vulcan-compiled-opencv.tgz"
+  # download open cv
+  vendored_opencv="/app/vendor/opencv"
+  mkdir -p $vendored_opencv
+  curl $opencv_package -s -o - | tar xzf - -C $vendored_opencv
 
-  echo "Compiling OpenCV v${opencv_version}..." | indent
-  curl -s ${opencv_url} > ${opencv_file}
-  tar zxf ${opencv_file}
-  cd ${opencv_dir}
-  mkdir build
-  cd build
-  cmake -DCMAKE_INSTALL_PREFIX=${target} -DCMAKE_FIND_ROOT_PATH=${target} -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SHARED_LIBS=OFF -DCMAKE_SHARED_LINKER_FLAGS="-fPIC" .. | indent
-  make install | indent
-  cd ..
+  # copy open cv libs to build dir
+  mkdir -p $build/lib
+  cp -a "$vendored_opencv/lib/." "$build/lib/"
 
-  tar czf ${cache_target} -C ${target} .
+  tar czf $cache_target -C $vendored_opencv .
 fi
 
-mkdir -p ${build_target}
-tar xzf ${cache_target} -C ${build_target}
+mkdir -p $build_target
+tar xzf $cache_target -C $build_target
+
+mkdir -p $build/.profile.d
+
+ls -la $build/*
+ls -la $target/*
+
+echo "export PATH=\$target/bin:\$PATH" > $build/.profile.d/opencv.sh
