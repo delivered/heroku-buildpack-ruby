@@ -11,6 +11,9 @@ indent() {
 build=$1
 cache=$2
 
+echo "Build dir: $1"
+echo "Cache dir: $2"
+
 mkdir -p ${build}
 mkdir -p ${cache}
 
