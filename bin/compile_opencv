@@ -37,10 +37,13 @@ if [ ! -f ${cache_target} ]; then
   echo "No cached compile detected. Building..." | indent
   cd $build
 
-  echo "Compiling cmake v${cmake_version}..." | indent
-
+  echo "Downloading: ${cmake_url} ..."
   curl -s ${cmake_url} > ${cmake_file}
+
+  echo "Uncompressing ${cmake_file}"
   tar -xvzf ${cmake_file}
+
+  echo "Compiling cmake v${cmake_version}..." | indent
   cd ${cmake_tar_dir}
   ./bootstrap --prefix=${target} | indent
   make | indent
