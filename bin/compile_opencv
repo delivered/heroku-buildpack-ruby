@@ -21,8 +21,8 @@ cmake_tar_dir="cmake-${cmake_version}"
 
 opencv_version="2.4.13"
 opencv_dir="opencv-${opencv_version}"
-opencv_file="${opencv_dir}.tar.gz"
-opencv_url="https://codeload.github.com/Itseez/opencv/tar.gz/${opencv_version}"
+opencv_file="${opencv_dir}.zip"
+opencv_url="http://download.solvoj.com/bin/opencv-ubuntu-amd64-${opencv_version}.zip"
 
 cache_target=${cache}/${cmake_file}
 build_target=${build}/.heroku
@@ -64,13 +64,25 @@ cache_target=$cache/$opencv_file
 build_target=$build/.heroku
 
 if [ ! -f $cache_target ]; then
-  opencv_package="https://s3.amazonaws.com/bloominga-public/heroku/vulcan-compiled-opencv.tgz"
-  # download open cv
-  vendored_opencv="/app/vendor/opencv"
-  mkdir -p $vendored_opencv
-  curl $opencv_package -s -o - | tar xzf - -C $vendored_opencv
 
-  # copy open cv libs to build dir
+  echo "Installing OpenCV libs" | indent
+  cd ${build}
+
+  current=$(pwd)
+  echo "Current dir: ${current}" | indent
+
+  vendored_opencv="${current}/vendor/opencv"
+  mkdir -p $vendored_opencv
+  cd ${vendored_opencv}
+
+  current=$(pwd)
+  echo "Current dir: ${current}" | indent
+
+  echo "Downloading OpenCV..." | indent
+  curl -L -s $opencv_url > ${current}/${opencv_file}
+  unzip ${current}/${opencv_file} -d $vendored_opencv
+
+  echo "Copying OpenCV libs to build dir..." | indent
   mkdir -p $build/lib
   cp -a "$vendored_opencv/lib/." "$build/lib/"
 
