@@ -8,6 +8,8 @@ indent() {
   sed -u 's/^/       /'
 }
 
+echo "Using solvoj ruby-opencv buildpack" | indent
+
 build=$1
 cache=$2
 
