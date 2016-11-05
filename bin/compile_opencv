@@ -99,4 +99,5 @@ ls -la $target/*
 
 echo "export PATH=\$target/bin:\$PATH" > $build/.profile.d/opencv.sh
 
+echo "Installing ruby-opencv gem" | indent
 gem install gem install ruby-opencv -- --with-opencv-dir="$build"
