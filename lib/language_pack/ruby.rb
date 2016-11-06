@@ -651,12 +651,13 @@ ERROR
   end
 
   def pre_bundler
+    bundler_output = ""
     instrument "ruby.pre_bundler" do
       log("bundle") do
         opencv_path = "/app/.heroku"
         bundle_bin     = "bundle"
         bundle_command = "#{bundle_bin} config build.ruby-opencv --with-opencv-dir=#{opencv_path}"
-        instrument "ruby.bundle_install" do
+        instrument "ruby.bundle_config" do
           bundle_time = Benchmark.realtime do
             bundler_output << pipe("#{bundle_command}", out: "2>&1", user_env: true)
           end
