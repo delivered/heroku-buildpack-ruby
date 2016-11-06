@@ -652,6 +652,7 @@ ERROR
 
   def pre_bundler
     bundler_output = ""
+    bundle_time = 0
     instrument "ruby.pre_bundler" do
       log("bundle") do
         opencv_path = "/app/.heroku"
