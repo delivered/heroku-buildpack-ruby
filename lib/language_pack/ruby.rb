@@ -97,7 +97,6 @@ WARNING
       setup_profiled
       allow_git do
         install_bundler_in_app
-        pre_bundler
         build_bundler
         post_bundler
         create_database_yml
@@ -644,31 +643,6 @@ https://devcenter.heroku.com/articles/sqlite3
 ERROR
           end
 
-          error error_message
-        end
-      end
-    end
-  end
-
-  def pre_bundler
-    bundler_output = ""
-    bundle_time = 0
-    instrument "ruby.pre_bundler" do
-      log("bundle") do
-        opencv_path = "/app/.heroku"
-        bundle_bin     = "bundle"
-        bundle_command = "#{bundle_bin} config build.ruby-opencv --with-opencv-dir=#{opencv_path}"
-        instrument "ruby.bundle_config" do
-          bundle_time = Benchmark.realtime do
-            puts "Running: #{bundle_command}"
-            bundler_output << pipe("#{bundle_command}", out: "2>&1", user_env: true)
-          end
-        end
-        if $?.success?
-          puts "Bundle config ruby-opencv (#{"%.2f" % bundle_time}s)"
-        else
-          error_message = "Failed to set bundle ruby-opencv config."
-          puts "Bundler config Output: #{bundler_output}"
           error error_message
         end
       end
