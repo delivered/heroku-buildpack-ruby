@@ -116,7 +116,7 @@ echo "export PATH=${target}/bin:\$PATH" > $build/.profile.d/opencv.sh
 #bundle config build.ruby-opencv --with-opencv-dir=${target}
 
 echo "Setting ruby-opencv installation config" | indent
-if [-f /app/.bundle/config]; then
+if [ -f /app/.bundle/config ]; then
     cat /app/.bundle/config
 fi
 echo "build.ruby-opencv --with-opencv-dir=${target}" >> /app/.bundle/config
