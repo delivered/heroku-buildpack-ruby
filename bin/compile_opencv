@@ -13,7 +13,7 @@ echo "Using solvoj ruby-opencv buildpack" | indent
 build=$1
 cache=$2
 
-echo "Running with build=$build and cache=$cache"
+echo "Running with build=$build and cache=$cache" | indent
 
 mkdir -p $build
 mkdir -p $cache
@@ -60,12 +60,12 @@ if [ ! -f ${cache_target} ]; then
   tar czf ${cache_target} -C ${target} .
 fi
 
-mkdir -p $build_target
-tar xzf $cache_target -C $build_target
-PATH=$build_target/bin:$PATH
+mkdir -p ${build_target}
+tar xzf ${cache_target} -C ${build_target}
+PATH=${build_target}/bin:$PATH
 
-cache_target=$cache/$opencv_file
-build_target=$build/.heroku
+cache_target=${cache}/${opencv_file}
+build_target=${build}/.heroku
 
 if [ ! -f $cache_target ]; then
 
@@ -84,7 +84,7 @@ if [ ! -f $cache_target ]; then
 
   echo "Downloading OpenCV..." | indent
   curl -L -s $opencv_url > ${current}/${opencv_file}
-  unzip ${current}/${opencv_file} -d $vendored_opencv
+  unzip ${current}/${opencv_file} -d ${vendored_opencv}
 
   echo "Copying OpenCV libs to build dir..." | indent
   mkdir -p $build/lib
@@ -93,7 +93,7 @@ if [ ! -f $cache_target ]; then
   tar czf $cache_target -C $vendored_opencv .
 fi
 
-echo "Coping cache [$cache_taget] to [$build_target]" | indent
+echo "Copying cache [$cache_target] to [$build_target]" | indent
 mkdir -p $build_target
 tar xzf $cache_target -C $build_target
 
@@ -105,6 +105,3 @@ ls -la $build/*
 echo "Target path: $target" | indent
 
 echo "export PATH=\$target/bin:\$PATH" > $build/.profile.d/opencv.sh
-
-echo "Installing ruby-opencv gem" | indent
-gem install ruby-opencv -- --with-opencv-dir=$target

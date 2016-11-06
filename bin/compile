@@ -15,10 +15,12 @@ if system "#{open_cv_command} #{ARGV[0]} #{ARGV[1]}"
         LanguagePack::ShellHelpers.initialize_env(ARGV[2])
         pack.topic("Compiling #{pack.name}")
         pack.log("compile") do
-	  pack.compile
+	        pack.compile
         end
       end
     end
+    Kernel.puts 'Installing ruby-opencv gem'
+    system 'gem install ruby-opencv -- --with-opencv-dir=/app/.heroku'
   rescue Exception => e
     Kernel.puts " !"
     e.message.split("\n").each do |line|
