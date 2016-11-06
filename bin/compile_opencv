@@ -103,7 +103,8 @@ echo "Build path: $build" | indent
 ls -la ${build}/*
 
 echo "Target path: $target" | indent
-ls -la /app/
+cp -r ${build_target} ${target}
+ls -la ${target}
 
 echo "export PATH=\$target/bin:\$PATH" > $build/.profile.d/opencv.sh
 
