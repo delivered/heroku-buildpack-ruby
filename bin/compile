@@ -19,8 +19,6 @@ if system "#{open_cv_command} #{ARGV[0]} #{ARGV[1]}"
         end
       end
     end
-    Kernel.puts 'Installing ruby-opencv gem'
-    system 'gem install ruby-opencv -- --with-opencv-dir=/app/.heroku'
   rescue Exception => e
     Kernel.puts " !"
     e.message.split("\n").each do |line|

@@ -97,11 +97,15 @@ echo "Copying cache [$cache_target] to [$build_target]" | indent
 mkdir -p $build_target
 tar xzf $cache_target -C $build_target
 
-mkdir -p $build/.profile.d
+mkdir -p ${build}/.profile.d
 
 echo "Build path: $build" | indent
-ls -la $build/*
+ls -la ${build}/*
 
 echo "Target path: $target" | indent
+ls -la /app/
 
 echo "export PATH=\$target/bin:\$PATH" > $build/.profile.d/opencv.sh
+
+echo "Installing ruby-opencv gem"
+gem install ruby-opencv -- --with-opencv-dir=${target}
