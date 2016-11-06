@@ -2,16 +2,17 @@ require "language_pack/shell_helpers"
 
 module LanguagePack
   class RubyVersion
-    class BadVersionError < StandardError
+    class BadVersionError < BuildpackError
       def initialize(output = "")
-        msg = "Can not parse Ruby Version:\n"
-        msg << "Valid versions listed on: https://devcenter.heroku.com/articles/ruby-support\n"
+        msg = ""
         msg << output
+        msg << "Can not parse Ruby Version:\n"
+        msg << "Valid versions listed on: https://devcenter.heroku.com/articles/ruby-support\n"
         super msg
       end
     end
 
-    DEFAULT_VERSION_NUMBER = "2.0.0"
+    DEFAULT_VERSION_NUMBER = "2.2.4"
     DEFAULT_VERSION        = "ruby-#{DEFAULT_VERSION_NUMBER}"
     LEGACY_VERSION_NUMBER  = "1.9.2"
     LEGACY_VERSION         = "ruby-#{LEGACY_VERSION_NUMBER}"
@@ -27,14 +28,29 @@ module LanguagePack
     attr_reader :set, :version, :version_without_patchlevel, :patchlevel, :engine, :ruby_version, :engine_version
     include LanguagePack::ShellHelpers
 
-    def initialize(bundler, app = {})
-      @set          = nil
-      @bundler      = bundler
-      @app          = app
+    def initialize(bundler_output, app = {})
+      @set            = nil
+      @bundler_output = bundler_output
+      @app            = app
       set_version
       parse_version
 
       @version_without_patchlevel = @version.sub(/-p[\d]+/, '')
+    end
+
+    # https://github.com/bundler/bundler/issues/4621
+    def version_for_download
+      if patchlevel_is_significant?
+        @version
+      else
+        version_without_patchlevel
+      end
+    end
+
+    # Before Ruby 2.1 patch releases were done via patchlevel i.e. 1.9.3-p426 versus 1.9.3-p448
+    # With 2.1 and above patches are released in the "minor" version instead i.e. 2.1.0 versus 2.1.1
+    def patchlevel_is_significant?
+      Gem::Version.new(self.ruby_version) <= Gem::Version.new("2.1")
     end
 
     def rake_is_vendored?
@@ -74,22 +90,6 @@ module LanguagePack
     end
 
     private
-    def gemfile
-      ruby_version = @bundler.ruby_version
-      return "" unless ruby_version
-
-      parts = [
-        "ruby",
-        ruby_version.version
-      ]
-      parts << "p#{ruby_version.patchlevel}" if ruby_version.patchlevel
-      unless ruby_version.engine == "ruby"
-        parts << ruby_version.engine
-        parts << ruby_version.engine_version
-      end
-
-      parts.compact.join("-")
-    end
 
     def none
       if @app[:is_new]
@@ -102,13 +102,12 @@ module LanguagePack
     end
 
     def set_version
-      bundler_output = gemfile
-      if bundler_output.empty?
+      if @bundler_output.empty?
         @set     = false
         @version = none
       else
         @set     = :gemfile
-        @version = gemfile
+        @version = @bundler_output
       end
     end
 

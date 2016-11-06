@@ -1,19 +1,10 @@
-# Heroku buildpack: Ruby with OpenCV
+# Heroku Buildpack for Ruby
+![ruby](https://cloud.githubusercontent.com/assets/51578/13712725/3c6b3368-e793-11e5-83c1-728440111358.png)
 
-This is a fork of the [Heroku Ruby buildpack](https://github.com/heroku/heroku-buildpack-ruby), that includes OpenCV and CMake for gems like `ruby-opencv` and 'ropencv' and all the fun computer vision tools to work on Heroku.
+This is a [Heroku Buildpack](http://devcenter.heroku.com/articles/buildpacks) for Ruby, Rack, and Rails apps. It uses [Bundler](https://bundler.io) for dependency management.
 
-## Usage
-
-Just set this as your buildpack with the following command:
-
-```sh
-heroku config:add BUILDPACK_URL=https://github.com/lilibethdlc/heroku-buildpack-ruby-opencv
-```
-
-## Flow
-
-Here's the basic flow of how the buildpack works:
-
+This buildpack requires 64-bit Linux.
+ 
 * Installs CMake, unless already installed.
 * Installs OpenCV, unless already installed.
 * Continues with the [heroku-buildpack-ruby flow](https://github.com/heroku/heroku-buildpack-ruby#flow)
