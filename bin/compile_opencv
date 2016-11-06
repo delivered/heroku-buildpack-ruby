@@ -8,7 +8,7 @@ indent() {
   sed -u 's/^/       /'
 }
 
-echo "Using solvoj ruby-opencv buildpack" | indent
+echo "*** Using solvoj ruby-opencv buildpack ***" | indent
 
 build=$1
 cache=$2
@@ -102,14 +102,16 @@ mkdir -p ${build}/.profile.d
 echo "Build path: $build" | indent
 ls -la ${build}/*
 
-echo "Target path: $target" | indent
-cp -r ${build_target} ${target}
-ls -la ${target}
+#echo "Target path: $target" | indent
+#cp -r ${build_target} ${target}
+#ls -la ${target}
 
-echo "export PATH=\$target/bin:\$PATH" > $build/.profile.d/opencv.sh
+echo "export PATH=${target}/bin:\$PATH" > $build/.profile.d/opencv.sh
 
-#echo "Installing ruby-opencv gem"
+#echo "Installing ruby-opencv gem" | indent
 #gem install ruby-opencv -- --with-opencv-dir=${target}
 
-echo "Setting ruby-opencv gem config"
+echo "Setting ruby-opencv gem config" | indent
 bundle config build.ruby-opencv --with-opencv-dir=${target}
+
+echo "*** CMake and OpenCV installation finished ***" | indent
