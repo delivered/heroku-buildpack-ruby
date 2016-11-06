@@ -111,8 +111,12 @@ echo "export PATH=${target}/bin:\$PATH" > $build/.profile.d/opencv.sh
 #echo "Installing ruby-opencv gem" | indent
 #gem install ruby-opencv -- --with-opencv-dir=${target}
 
-echo "Setting ruby-opencv gem config" | indent
-gem install bundler
-bundle config build.ruby-opencv --with-opencv-dir=${target}
+#echo "Setting ruby-opencv gem config" | indent
+#gem install bundler
+#bundle config build.ruby-opencv --with-opencv-dir=${target}
+
+echo "Setting ruby-opencv installation config" | indent
+mkdir /app/.bundle
+echo "build.ruby-opencv --with-opencv-dir=${target}" > /app/.bundle/config
 
 echo "*** CMake and OpenCV installation finished ***" | indent
