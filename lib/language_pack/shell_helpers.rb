@@ -80,7 +80,9 @@ module LanguagePack
       options[:out] ||= "2>&1"
       options[:env] = user_env_hash.merge(options[:env]) if options[:user_env]
       env = options[:env].map {|key, value| "#{key.shellescape}=#{value.shellescape}" }.join(" ")
-      "/usr/bin/env #{env} bash -c #{command.shellescape} #{options[:out]} "
+      result = "/usr/bin/env #{env} bash -c #{command.shellescape} #{options[:out]} "
+      p result
+      result
     end
 
     # run a shell command and stream the output
