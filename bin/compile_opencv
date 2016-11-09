@@ -125,3 +125,5 @@ echo "export PATH=${target}/bin:\$PATH" > $build/.profile.d/opencv.sh
 #make install
 
 echo "*** CMake and OpenCV installation finished ***" | indent
+
+more "${build}/.bundle/config"
