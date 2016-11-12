@@ -109,21 +109,9 @@ ls -la ${target}
 
 echo "export PATH=${target}/bin:\$PATH" > $build/.profile.d/opencv.sh
 
-#echo "Installing ruby-opencv gem" | indent
-#gem install ruby-opencv -- --with-opencv-dir=${target}
+opencv_env = ${envnt}/BUNDLE_BUILD__RUBY-OPENCV
+if [ ! -f ${opencv_env} ]; then
+    echo "--with-opencv-dir=/app/.heroku" > ${opencv_env}
+fi
 
-#echo "Setting ruby-opencv gem config" | indent
-#gem install bundler
-#bundle config build.ruby-opencv --with-opencv-dir=${target}
-
-#echo "Compiling ruby-opencv natives" | indent
-#cd ${build}
-#git clone git://github.com/ruby-opencv/ruby-opencv.git
-#cd ruby-opencv
-#git checkout master
-#ruby ext/opencv/extconf.rb --with-opencv-dir=${target}
-#make
-#make install
-
-ls ${envnt}
 echo "*** CMake and OpenCV installation finished ***" | indent
