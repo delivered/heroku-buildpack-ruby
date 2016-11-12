@@ -32,11 +32,15 @@ module LanguagePack
 
     def self.initialize_env(path)
       env_dir = Pathname.new("#{path}")
+      puts "env_dir: #{path}"
       if env_dir.exist? && env_dir.directory?
+        puts 'env_dir: found!'
+        p blacklist
         env_dir.each_child do |file|
           key   = file.basename.to_s
           value = file.read.strip
           user_env_hash[key] = value unless blacklist?(key)
+          puts "#{key}: #{value}"
         end
       end
     end
