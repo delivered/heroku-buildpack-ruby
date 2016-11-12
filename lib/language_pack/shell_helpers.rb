@@ -35,7 +35,6 @@ module LanguagePack
       puts "env_dir: #{path}"
       if env_dir.exist? && env_dir.directory?
         puts 'env_dir: found!'
-        p blacklist?
         env_dir.each_child do |file|
           key   = file.basename.to_s
           value = file.read.strip
