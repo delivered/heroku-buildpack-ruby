@@ -109,7 +109,7 @@ ls -la ${target}
 
 echo "export PATH=${target}/bin:\$PATH" > $build/.profile.d/opencv.sh
 
-opencv_env = ${envnt}/BUNDLE_BUILD__RUBY-OPENCV
+opencv_env=${envnt}/BUNDLE_BUILD__RUBY-OPENCV
 if [ ! -f ${opencv_env} ]; then
     echo "--with-opencv-dir=/app/.heroku" > ${opencv_env}
 fi
