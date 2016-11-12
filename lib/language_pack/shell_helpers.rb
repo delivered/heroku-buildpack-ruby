@@ -32,14 +32,11 @@ module LanguagePack
 
     def self.initialize_env(path)
       env_dir = Pathname.new("#{path}")
-      puts "env_dir: #{path}"
       if env_dir.exist? && env_dir.directory?
-        puts 'env_dir: found!'
         env_dir.each_child do |file|
           key   = file.basename.to_s
           value = file.read.strip
           user_env_hash[key] = value unless blacklist?(key)
-          puts "#{key}: #{value}"
         end
       end
     end
@@ -82,11 +79,8 @@ module LanguagePack
       options[:env] ||= {}
       options[:out] ||= "2>&1"
       options[:env] = user_env_hash.merge(options[:env]) if options[:user_env]
-      p user_env_hash
       env = options[:env].map {|key, value| "#{key.shellescape}=#{value.shellescape}" }.join(" ")
-      result = "/usr/bin/env #{env} bash -c #{command.shellescape} #{options[:out]} "
-      p result
-      result
+      "/usr/bin/env #{env} bash -c #{command.shellescape} #{options[:out]} "
     end
 
     # run a shell command and stream the output
