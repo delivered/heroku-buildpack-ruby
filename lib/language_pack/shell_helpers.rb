@@ -79,6 +79,7 @@ module LanguagePack
       options[:env] ||= {}
       options[:out] ||= "2>&1"
       options[:env] = user_env_hash.merge(options[:env]) if options[:user_env]
+      p options[:user_env]
       env = options[:env].map {|key, value| "#{key.shellescape}=#{value.shellescape}" }.join(" ")
       result = "/usr/bin/env #{env} bash -c #{command.shellescape} #{options[:out]} "
       p result
