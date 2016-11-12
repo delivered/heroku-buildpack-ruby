@@ -124,7 +124,4 @@ echo "export PATH=${target}/bin:\$PATH" > $build/.profile.d/opencv.sh
 #make
 #make install
 
-mkdir -p ${build}/.bundle
-echo "BUNDLE_BUILD__RUBY-OPENCV='--with-opencv-dir=/app/.heroku'" >> ${build}/.bundle/config
-
 echo "*** CMake and OpenCV installation finished ***" | indent
