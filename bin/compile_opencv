@@ -27,6 +27,7 @@ cmake_tar_dir="cmake-${cmake_version}"
 opencv_version="2.4.13-3"
 opencv_dir="opencv-${opencv_version}"
 opencv_file="${opencv_dir}.zip"
+opencv_cache="${opencv_dir}.tar.gz"
 opencv_url="http://download.solvoj.com/bin/opencv-ubuntu-amd64-${opencv_version}.zip"
 
 cache_target=${cache}/${cmake_file}
@@ -67,7 +68,7 @@ tar xzf ${cache_target} -C ${build_target}
 PATH=${build_target}/bin:$PATH
 LD_LIBRARY_PATH=${target}/lib:$LD_LIBRARY_PATH
 
-cache_target=${cache}/${opencv_file}
+cache_target=${cache}/${opencv_cache}
 build_target=${build}/.heroku
 
 if [ ! -f $cache_target ]; then
@@ -88,10 +89,6 @@ if [ ! -f $cache_target ]; then
   echo "Downloading OpenCV..." | indent
   curl -L -s $opencv_url > ${current}/${opencv_file}
   unzip ${current}/${opencv_file} -d ${vendored_opencv}
-
-  echo "Copying OpenCV libs to build dir..." | indent
-  mkdir -p $build/lib
-  cp -a "$vendored_opencv/lib/." "$build/lib/"
 
   tar czf $cache_target -C $vendored_opencv .
 fi
