@@ -97,6 +97,8 @@ echo "Extracting [$cache_target] to [$build_target]" | indent
 mkdir -p $build_target
 tar xzf ${cache_target} -C ${build_target}
 
+mkdir -p ${build}/.profile.d
+
 echo "Build path: $build" | indent
 ls -la ${build_target}/*
 
