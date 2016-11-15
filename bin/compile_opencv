@@ -95,12 +95,12 @@ fi
 
 echo "Copying cache [$cache_target] to [$build_target]" | indent
 mkdir -p $build_target
-tar xzf $cache_target -C $build_target
+tar xzf ${cache_target} -C ${build_target}
 
 mkdir -p ${build}/.profile.d
 
 echo "Build path: $build" | indent
-ls -la ${build}/*
+ls -la ${build_target}/*
 
 echo "Copying '${build_target}' to '${target}'" | indent
 cp -r ${build_target} ${target}
