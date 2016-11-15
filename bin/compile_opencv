@@ -97,14 +97,16 @@ echo "Extracting [$cache_target] to [$build_target]" | indent
 mkdir -p $build_target
 tar xzf ${cache_target} -C ${build_target}
 
-mkdir -p ${build}/.profile.d
+#mkdir -p ${build}/.profile.d
 
 echo "Build path: $build" | indent
 ls -la ${build_target}/*
 ls -la ${target}/*
 
 echo "Copying '${build_target}' to '${target}'" | indent
-cp -r ${build_target} ${target}
+cp -rv ${build_target} ${target}
+mkdir -p ${target}/lib
+cp -v ${build_target}/lib/* ${target}/lib/
 ls -la ${build_target}/*
 ls -la ${target}/*
 
