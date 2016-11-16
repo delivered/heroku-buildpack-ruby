@@ -30,7 +30,7 @@ cmake_url="https://www.cmake.org/files/v2.8/cmake-${cmake_version}.tar.gz"
 cmake_file="cmake-${cmake_version}.tar.gz"
 cmake_tar_dir="cmake-${cmake_version}"
 
-opencv_version="2.4.13-3"
+opencv_version="2.4.13"
 opencv_path="${pack}/../vendor/bin/opencv-linux-amd64-${opencv_version}.tar.gz"
 
 cache_target=${cache}/${cmake_file}
