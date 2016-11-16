@@ -75,7 +75,7 @@ build_target=${build}/.heroku
 
 echo "Extracting [$opencv_path] to [$build_target]" | indent
 mkdir -p $build_target
-tar xzf ${$opencv_path} -C ${build_target}
+tar xzf ${opencv_path} -C ${build_target}
 
 mkdir -p ${build}/.profile.d
 
